@@ -21,8 +21,15 @@ O objetivo é demonstrar:
 ├── README.md
 ├── docs/
 │   └── insights.md              # Anotações e aprendizados do laboratório
-├── images/                      # Capturas de tela do processo (opcional)
-│   └── GUIA-PRINTS.md           # Passo a passo para obter os prints
+├── images/                      # Capturas de tela da prática na AWS
+│   ├── GUIA-PRINTS.md           # Passo a passo para obter os prints
+│   ├── 03-create-stack-template.png
+│   ├── 04-stack-options.png
+│   ├── 05-stack-events-timeline.png
+│   ├── 05-stack-events.png
+│   ├── 06-stack-resources.png
+│   ├── 07-stack-outputs.png
+│   └── 08-s3-bucket.png
 └── templates/
     ├── infra-basica.yaml        # Stack gratuita (S3) — recomendada para demo
     └── lamp-single-instance.yaml # Stack LAMP (EC2) — alinhada às aulas
@@ -140,9 +147,33 @@ Buckets S3 versionados podem exigir esvaziamento manual antes da exclusão.
 
 Consulte o arquivo [docs/insights.md](docs/insights.md) para anotações detalhadas sobre a experiência prática, benefícios do CloudFormation e boas práticas identificadas durante o laboratório.
 
-## Capturas de tela
+## Evidências da prática
 
-As imagens do processo podem ser adicionadas na pasta `/images`. Siga o guia em [images/GUIA-PRINTS.md](images/GUIA-PRINTS.md) para saber exatamente o que capturar.
+As capturas de tela do deploy realizado na AWS estão na pasta [`/images`](images/). Elas documentam todo o fluxo: upload do template, configuração da pilha, criação dos recursos e validação no S3.
+
+| Arquivo | Descrição |
+|---------|-----------|
+| [03-create-stack-template.png](images/03-create-stack-template.png) | Upload do template `infra-basica.yaml` |
+| [04-stack-options.png](images/04-stack-options.png) | Configuração de opções da pilha |
+| [05-stack-events-timeline.png](images/05-stack-events-timeline.png) | Linha do tempo com status **CREATE_COMPLETE** |
+| [05-stack-events.png](images/05-stack-events.png) | Aba Eventos da pilha `dio-cf-infra-basica` |
+| [06-stack-resources.png](images/06-stack-resources.png) | Recursos criados (S3 Bucket + Bucket Policy) |
+| [07-stack-outputs.png](images/07-stack-outputs.png) | Outputs exportados (BucketName, BucketArn, região) |
+| [08-s3-bucket.png](images/08-s3-bucket.png) | Bucket criado visível no console S3 |
+
+### Galeria
+
+![Upload do template](images/03-create-stack-template.png)
+
+![Eventos — CREATE_COMPLETE](images/05-stack-events-timeline.png)
+
+![Recursos da pilha](images/06-stack-resources.png)
+
+![Outputs da pilha](images/07-stack-outputs.png)
+
+![Bucket S3 criado](images/08-s3-bucket.png)
+
+> Guia completo para reproduzir as capturas: [images/GUIA-PRINTS.md](images/GUIA-PRINTS.md)
 
 ## Referências
 

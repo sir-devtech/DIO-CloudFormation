@@ -1,0 +1,102 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Stack educacional DIO - Infraestrutura basica automatizada com S3,
+  tags e outputs. Ideal para demonstrar CloudFormation sem custo significativo.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: dio-cloudformation-lab
+    Description: Nome do projeto usado em tags e nomes de recursos
+    AllowedPattern: ^[a-z0-9-]+$
+    ConstraintDescription: Use apenas letras minusculas, numeros e hifens
+
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - homolog
+      - prod
+    Description: Ambiente de implantacao
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Configuracao do Projeto
+        Parameters:
+          - ProjectName
+          - Environment
+    ParameterLabels:
+      ProjectName:
+        default: Nome do Projeto
+      Environment:
+        default: Ambiente
+
+Resources:
+  ProjectBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      BucketName: !Sub '${ProjectName}-${Environment}-${AWS::AccountId}'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+        - Key: Course
+          Value: DIO-AWS-CloudFormation
+
+  ProjectBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ProjectBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: DenyInsecureTransport
+            Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource:
+              - !GetAtt ProjectBucket.Arn
+              - !Sub '${ProjectBucket.Arn}/*'
+            Condition:
+              Bool:
+                aws:SecureTransport: false
+
+Outputs:
+  BucketName:
+    Description: Nome do bucket S3 criado
+    Value: !Ref ProjectBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-BucketName'
+
+  BucketArn:
+    Description: ARN do bucket S3
+    Value: !GetAtt ProjectBucket.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-BucketArn'
+
+  StackRegion:
+    Description: Regiao onde a stack foi implantada
+    Value: !Ref AWS::Region
+
+  ProjectTag:
+    Description: Tag de projeto aplicada aos recursos
+    Value: !Ref ProjectName

@@ -1,0 +1,25 @@
+# AWS / CloudFormation
+*.zip
+.aws/
+
+# Credenciais e secrets
+.env
+.env.*
+*.pem
+*.key
+credentials
+secrets.*
+
+# SO
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs
+*.log
